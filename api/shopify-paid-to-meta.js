@@ -39,10 +39,8 @@ const isCard = !isPix;
 console.log("gateways_lower:", gateways);
 console.log("isPix:", isPix);
 
-  if (!isPix) {
-    // Não é Pix: não envia nada pro Meta
-    return res.status(200).json({ ok: true, sent: false, reason: "not_pix" });
-  }
+  const eventName = isPix ? "PurchasePix" : "PurchaseCard";
+console.log("eventName:", eventName);
 
   // 4) Montar evento CAPI
   const pixelId = process.env.META_PIXEL_ID;
@@ -62,12 +60,12 @@ console.log("isPix:", isPix);
   const phone = order.phone ? hash(normalizePhone(order.phone)) : undefined;
 
   // event_id pra deduplicar (se você tiver pixel também disparando purchase)
-  const eventId = `pix_${order.id}_${order.order_number}`;
+  const eventId = `${isPix ? "pix" : "card"}_${order.id}_${order.order_number}`;
 
   const payload = {
     data: [
       {
-        event_name: isPix ? "PurchasePix" : "PurchaseCard",
+        event_name: eventName,
         event_time: eventTime,
         action_source: "website",
         event_id: eventId,
