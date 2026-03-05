@@ -26,11 +26,17 @@ export default async function handler(req, res) {
 
   // 2) Parse do pedido
   const order = JSON.parse(rawBody);
+console.log("=== WEBHOOK RECEBIDO ===");
+console.log("order_id:", order.id, "order_number:", order.order_number);
+console.log("payment_gateway_names:", order.payment_gateway_names);
+console.log("financial_status:", order.financial_status);
 
   // 3) Detectar Pix (você vai ajustar conforme seu gateway real)
   // Shopify normalmente manda payment_gateway_names como array.
   const gateways = (order.payment_gateway_names || []).map((g) => String(g).toLowerCase());
   const isPix = gateways.some((g) => g.includes("pix"));
+console.log("gateways_lower:", gateways);
+console.log("isPix:", isPix);
 
   if (!isPix) {
     // Não é Pix: não envia nada pro Meta
@@ -95,6 +101,8 @@ export default async function handler(req, res) {
   });
 
   const metaJson = await metaResp.json();
+console.log("META status:", metaResp.status);
+console.log("META response:", metaJson);
 
   return res.status(200).json({ ok: true, sent: true, meta: metaJson });
 }
