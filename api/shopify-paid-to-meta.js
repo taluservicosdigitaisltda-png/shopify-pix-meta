@@ -35,6 +35,7 @@ console.log("financial_status:", order.financial_status);
   // Shopify normalmente manda payment_gateway_names como array.
   const gateways = (order.payment_gateway_names || []).map((g) => String(g).toLowerCase());
   const isPix = gateways.some((g) => g.includes("pix"));
+const isCard = !isPix;
 console.log("gateways_lower:", gateways);
 console.log("isPix:", isPix);
 
@@ -66,7 +67,7 @@ console.log("isPix:", isPix);
   const payload = {
     data: [
       {
-        event_name: "PurchasePix",
+        event_name: isPix ? "PurchasePix" : "PurchaseCard",
         event_time: eventTime,
         action_source: "website",
         event_id: eventId,
@@ -81,7 +82,7 @@ console.log("isPix:", isPix);
           value,
           order_id: String(order.id),
           order_number: String(order.order_number),
-          payment_method: "pix",
+          payment_method: isPix ? "pix" : "card",
         },
       },
     ],
