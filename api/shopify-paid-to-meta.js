@@ -76,11 +76,13 @@ console.log("eventName:", eventName);
           client_user_agent: req.headers["user-agent"],
         },
         custom_data: {
-          currency,
-          value,
-          order_id: String(order.id),
-          order_number: String(order.order_number),
-          payment_method: isPix ? "pix" : "card",
+  currency,
+  value,
+  order_id: String(order.id),
+  order_number: String(order.order_number),
+  payment_method: isPix ? "pix" : "card",
+  payment_status: financialStatus,
+},
         },
       },
     ],
@@ -133,3 +135,4 @@ function getRawBody(req) {
     req.on("error", reject);
   });
 }
+
